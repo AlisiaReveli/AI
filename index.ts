@@ -40,6 +40,20 @@ async function main() {
               };
             },
           }),
+          convertFahrenheitToCelsius: tool({
+            description: 'Convert a temperature in fahrenheit to celsius',
+            inputSchema: z.object({
+              temperature: z
+                .number()
+                .describe('The temperature in fahrenheit to convert'),
+            }),
+            execute: async ({ temperature }) => {
+              const celsius = Math.round((temperature - 32) * (5 / 9));
+              return {
+                celsius,
+              };
+            },
+          }),
         },
       });
       
@@ -50,7 +64,7 @@ async function main() {
       // Wait for the full response and get all messages (tool calls + results)
       const response = await result.response;
       messages.push(...response.messages);
-      
+      console.log('response', response);
       // Check if the last message has tool calls - if so, continue the loop
       const lastMessage = response.messages[response.messages.length - 1];
       continueLoop = lastMessage.role === 'tool';
